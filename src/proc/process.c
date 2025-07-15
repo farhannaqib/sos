@@ -3,7 +3,7 @@
 #include "apps/apps.h"
 
 void program_init() {
-
+    // TODO
 }
 
 struct program *program_search(const char *name, size_t length) {

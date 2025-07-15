@@ -1,5 +1,5 @@
-CFILES = $(wildcard */*/*.c)
-SFILES = $(wildcard */*/*.S)
+CFILES = $(wildcard src/*/*.c)
+SFILES = $(wildcard src/*/*.S)
 COFILES = $(CFILES:.c=.co)
 AOFILES = $(SFILES:.S=.ao)
 
@@ -17,15 +17,18 @@ user: clean $(COFILES) $(AOFILES)
 	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib
 	$(LLVMPATH)clang -o kernel.bin $(LDFLAGS) $(COFILES) $(AOFILES)
 
-*/*/%.ao: src/*/%.S include/*/*.h
+*/*/%.ao: src/*/%.S
 	$(LLVMPATH)clang $(CLANGFLAGS) $(CPPFLAGS) -c $< -o $@
 
-*/*/%.co: src/*/%.c include/*/*.h
+*/*/%.co: src/*/%.c
 	$(LLVMPATH)clang $(CLANGFLAGS) $(CPPFLAGS) -c $< -o $@
 
 kernel8.img: $(COFILES) $(AOFILES)
 	$(LLVMPATH)ld.lld $(LDFLAGS) $(COFILES) $(AOFILES) -o kernel8.elf
 	$(LLVMPATH)llvm-objcopy -O binary kernel8.elf kernel8.img
+
+test: test/*/*.c
+	$(LLVMPATH)clang $(CLANGFLAGS) $(CPPFLAGS) -c $^ test/utils.c -o $@
 
 clean:
 	/bin/rm *.elf */*/*.co */*/*.ao *.img *.bin > /dev/null 2> /dev/null || true

@@ -1,5 +1,6 @@
 #include "lib/queue.h"
 #include "stdlib/stdalloc.h"
+#include "stdlib/stdtypes.h"
 
 /** Data structure for a node */
 struct node {
@@ -12,7 +13,7 @@ struct node {
 void queue_init(struct queue *q){
     q->front = NULL;
     q->back = NULL;
-    q->size=0;
+    q->size = 0;
 };
 
 void queue_free(struct queue *q){
