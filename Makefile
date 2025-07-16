@@ -4,6 +4,7 @@ COFILES = $(CFILES:.c=.co)
 AOFILES = $(SFILES:.S=.ao)
 
 kernel: LLVMPATH = /opt/homebrew/opt/llvm/bin/
+kernel: LDPATH = /opt/homebrew/bin/
 kernel: CLANGFLAGS = --target=aarch64-elf -Wall -ffreestanding -nostdinc -nostdlib -mcpu=cortex-a72+nosimd
 kernel: CPPFLAGS = -Iinclude
 kernel: LDFLAGS = -m aarch64elf -nostdlib -T link.ld --strip-all
@@ -24,7 +25,7 @@ user: clean $(COFILES) $(AOFILES)
 	$(LLVMPATH)clang $(CLANGFLAGS) $(CPPFLAGS) -c $< -o $@
 
 kernel8.img: $(COFILES) $(AOFILES)
-	$(LLVMPATH)ld.lld $(LDFLAGS) $(COFILES) $(AOFILES) -o kernel8.elf
+	$(LDPATH)ld.lld $(LDFLAGS) $(COFILES) $(AOFILES) -o kernel8.elf
 	$(LLVMPATH)llvm-objcopy -O binary kernel8.elf kernel8.img
 
 test: test/*/*.c
